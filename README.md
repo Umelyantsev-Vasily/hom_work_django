@@ -71,7 +71,7 @@ django-catalog/
 ---
 
 ###### Документация:
-- Дополнительную информацию о структуре проекта и API можно найти в [GitHab](https://github.com/Umelyantsev-Vasily/coursework)
+- Дополнительную информацию о структуре проекта и API можно найти в [GitHab](https://github.com/Umelyantsev-Vasily/hom_work_django)
 
 ## Лицензия:
 
