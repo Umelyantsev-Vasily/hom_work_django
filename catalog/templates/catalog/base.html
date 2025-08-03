@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Skystore{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .content {
+            flex: 1;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column h-100">
+    <!-- Шапка сайта -->
+    {% include 'catalog/includes/header.html' %}
+
+    <!-- Основное меню -->
+    {% include 'catalog/includes/menu.html' %}
+
+    <!-- Основной контент -->
+    <main class="flex-shrink-0 content">
+        <div class="container mt-4">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    {% include 'catalog/includes/footer.html' %}
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

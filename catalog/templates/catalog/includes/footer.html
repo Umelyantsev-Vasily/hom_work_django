@@ -1,0 +1,24 @@
+<footer class="footer mt-auto py-3 bg-dark text-white border-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md">
+                <h5>SkyStore</h5>
+                <small class="d-block mb-3 text-light">&copy; {% now "Y" %}</small>
+            </div>
+            <div class="col-6 col-md">
+                <h6 class="text-white">Категории</h6>
+                <ul class="list-unstyled">
+                    <li><a class="text-light" href="#">Рассылки</a></li>
+                    <li><a class="text-light" href="#">Телеграм боты</a></li>
+                    <li><a class="text-light" href="#">Полезные утилиты</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h6 class="text-white">О нас</h6>
+                <ul class="list-unstyled">
+                    <li><a class="text-light" href="{% url 'catalog:contacts' %}">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
