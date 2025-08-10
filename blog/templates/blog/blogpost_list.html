@@ -1,0 +1,80 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Список статей{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Статьи блога</h1>
+
+    {% if user.is_authenticated %}
+    <a href="{% url 'blog:post_create' %}" class="btn btn-primary mb-4">
+        <i class="fas fa-plus"></i> Новая статья
+    </a>
+    {% endif %}
+
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                {% if post.preview %}
+                <img src="{{ post.preview.url }}" class="card-img-top" alt="{{ post.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title">{{ post.title }}</h2>
+                    <p class="card-text text-muted">
+                        <small>
+                            {{ post.created_at|date:"d.m.Y" }} |
+                            Просмотров: {{ post.views_count }}
+                            {% if not post.is_published %}
+                                <span class="badge bg-secondary">Черновик</span>
+                            {% endif %}
+                        </small>
+                    </p>
+                    <div class="btn-group">
+                        <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-outline-primary">
+                            Читать
+                        </a>
+                        {% if user.is_authenticated and user.is_staff %}
+                        <a href="{% url 'blog:post_edit' post.pk %}" class="btn btn-sm btn-outline-warning">
+                            Редактировать
+                        </a>
+                        <a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-sm btn-outline-danger">
+                            Удалить
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">Нет опубликованных статей.</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

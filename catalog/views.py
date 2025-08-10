@@ -1,19 +1,25 @@
 # catalog/views.py
-from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView, TemplateView
 from .models import Product
 
-def home(request):
-    products = Product.objects.all()[:12]  # Берем первые 12 товаров
-    return render(request, 'catalog/home.html', {'products': products})
 
-def contacts(request):
-    if request.method == 'POST':
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/home.html'
+    context_object_name = 'products'
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product_detail.html'
+
+
+class ContactsView(TemplateView):
+    template_name = 'catalog/contacts.html'
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
-        email = request.POST.get('email')
+        phone = request.POST.get('phone')
         message = request.POST.get('message')
-        print(f"Новое сообщение от {name} ({email}): {message}")
-    return render(request, 'catalog/contacts.html')
-
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'catalog/product_detail.html', {'product': product})
+        print(f"Новое сообщение от {name} ({phone}): {message}")
+        return self.get(request, *args, **kwargs)
