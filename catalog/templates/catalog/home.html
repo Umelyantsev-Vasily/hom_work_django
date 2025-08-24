@@ -3,51 +3,130 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="my-4">Список товаров</h1>
-    <a href="{% url 'catalog:product_create' %}" class="btn btn-success mb-3">Добавить товар</a>
+    <!-- Приветственный блок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-3">Добро пожаловать в Skystore!</h1>
+            <p class="lead">Лучшие товары по выгодным ценам</p>
 
-    <div class="row">
-        {% for product in products %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <!-- Блок с фоновым изображением -->
-                <div class="card-img-container"
-                     style="background-image: url('{% static 'images/product_1.jpg' %}');
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-            position: relative;">
+            {% if not user.is_authenticated %}
+            <div class="mt-4">
+                <a href="{% url 'users:register' %}" class="btn btn-primary btn-lg me-3">
+                    🚀 Начать покупки
+                </a>
+                <span class="text-muted">или</span>
+                <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-lg ms-3">
+                    Войти в аккаунт
+                </a>
+            </div>
+            {% else %}
+            <div class="mt-4">
+                <a href="{% url 'catalog:product_list' %}" class="btn btn-primary btn-lg me-3">
+                    📦 Смотреть все товары
+                </a>
+                <a href="{% url 'catalog:product_create' %}" class="btn btn-success btn-lg">
+                    ＋ Добавить товар
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 
-                    <!-- Затемнение фона -->
-                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-                               background: rgba(0, 0, 0, 0.3);"></div>
-
-                    <!-- Название товара -->
-                    <h5 class="position-relative p-3 mb-0"
-                        style="color: #0f0;
-       text-shadow: 0 0 5px #0f0,
-                    0 0 10px #0f0,
-                    0 0 20px #0f0;">
-                        {{ product.name }}
-                    </h5>
-                </div>
-
-                <!-- Блок с кнопками -->
+    <!-- Преимущества -->
+    <div class="row mb-5">
+        <div class="col-md-4 text-center mb-4">
+            <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body">
-                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
-                    <p class="card-text"><strong>Цена: {{ product.price }} руб.</strong></p>
-                    <div class="d-flex justify-content-between">
-                        <a href="{% url 'catalog:product_detail' product.pk %}"
-                           class="btn btn-sm btn-info">Подробнее</a>
-                        <a href="{% url 'catalog:product_update' product.pk %}"
-                           class="btn btn-sm btn-primary">Изменить</a>
-                        <a href="{% url 'catalog:product_delete' product.pk %}"
-                           class="btn btn-sm btn-danger">Удалить</a>
-                    </div>
+                    <h3 class="text-primary">🛒 Широкий ассортимент</h3>
+                    <p>Тысячи товаров на любой вкус от проверенных поставщиков</p>
                 </div>
             </div>
         </div>
-        {% endfor %}
+        <div class="col-md-4 text-center mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="text-success">🚚 Быстрая доставка</h3>
+                    <p>Доставка по всему городу за 24 часа. Бесплатно от 3000 руб.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="text-warning">⭐ Гарантия качества</h3>
+                    <p>Все товары проходят строгий контроль качества перед отправкой</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Популярные товары -->
+    {% if user.is_authenticated and featured_products %}
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Популярные товары</h2>
+
+            <div class="row">
+                {% for product in featured_products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-img-container"
+                             style="background-image: url('{% static 'images/product_1.jpg' %}');
+                                    height: 200px;
+                                    background-size: cover;
+                                    background-position: center;
+                                    position: relative;">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                                       background: rgba(0, 0, 0, 0.3);"></div>
+                            <h5 class="position-relative p-3 mb-0"
+                                style="color: #0f0;
+                                       text-shadow: 0 0 5px #0f0,
+                                                    0 0 10px #0f0,
+                                                    0 0 20px #0f0;">
+                                {{ product.name }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                            <p class="card-text"><strong>Цена: {{ product.price }} руб.</strong></p>
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'catalog:product_detail' product.pk %}"
+                                   class="btn btn-sm btn-info">Подробнее</a>
+                                <a href="{% url 'catalog:product_list' %}" class="btn btn-sm btn-primary">
+                                    Все товары
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-primary btn-lg">
+                    Смотреть все товары →
+                </a>
+            </div>
+        </div>
+    </div>
+    {% elif not user.is_authenticated %}
+    <!-- Призыв к регистрации -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="card bg-light border-0">
+                <div class="card-body py-5">
+                    <h2 class="text-primary mb-3">✨ Получите полный доступ!</h2>
+                    <p class="mb-4">Зарегистрируйтесь, чтобы увидеть весь каталог товаров и начать покупки</p>
+                    <a href="{% url 'users:register' %}" class="btn btn-primary btn-lg me-3">
+                        Создать аккаунт
+                    </a>
+                    <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-lg">
+                        Уже есть аккаунт?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -16,9 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('catalog.urls')),
-    path('blog/', include('blog.urls')),
+    path('catalog/', include('catalog.urls', namespace='catalog')),
+    path('users/', include('users.urls', namespace='users')),
+    path('', RedirectView.as_view(url='/catalog/', permanent=True)), # Перенаправление на каталог
 ]
+
+
