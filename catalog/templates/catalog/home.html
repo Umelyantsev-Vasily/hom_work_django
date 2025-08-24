@@ -1,25 +1,49 @@
 {% extends 'catalog/base.html' %}
-
-{% block title %}Главная страница{% endblock %}
+{% load static %}
 
 {% block content %}
-<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">Skystore</h1>
-    <p class="lead">Skystore - это отличный вариант хранения ваших плагинов и примеров кода</p>
-</div>
-
 <div class="container">
-    <div class="row text-center">
+    <h1 class="my-4">Список товаров</h1>
+    <a href="{% url 'catalog:product_create' %}" class="btn btn-success mb-3">Добавить товар</a>
+
+    <div class="row">
         {% for product in products %}
-        <div class="col-3">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <!-- Блок с фоновым изображением -->
+                <div class="card-img-container"
+                     style="background-image: url('{% static 'images/product_1.jpg' %}');
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;">
+
+                    <!-- Затемнение фона -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                               background: rgba(0, 0, 0, 0.3);"></div>
+
+                    <!-- Название товара -->
+                    <h5 class="position-relative p-3 mb-0"
+                        style="color: #0f0;
+       text-shadow: 0 0 5px #0f0,
+                    0 0 10px #0f0,
+                    0 0 20px #0f0;">
+                        {{ product.name }}
+                    </h5>
                 </div>
+
+                <!-- Блок с кнопками -->
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{ product.price }} руб.</h1>
-                    <p>{{ product.description|truncatechars:100 }}</p>
-                    <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-lg btn-block btn-outline-primary">Подробнее</a>
+                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                    <p class="card-text"><strong>Цена: {{ product.price }} руб.</strong></p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'catalog:product_detail' product.pk %}"
+                           class="btn btn-sm btn-info">Подробнее</a>
+                        <a href="{% url 'catalog:product_update' product.pk %}"
+                           class="btn btn-sm btn-primary">Изменить</a>
+                        <a href="{% url 'catalog:product_delete' product.pk %}"
+                           class="btn btn-sm btn-danger">Удалить</a>
+                    </div>
                 </div>
             </div>
         </div>
