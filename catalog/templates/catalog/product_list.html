@@ -1,0 +1,71 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Все товары</h1>
+    
+    {% if user.is_authenticated %}
+    <a href="{% url 'catalog:product_create' %}" class="btn btn-success mb-3">Добавить товар</a>
+    {% endif %}
+
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <!-- Блок с фоновым изображением -->
+                <div class="card-img-container"
+                     style="background-image: url('{% static 'images/product_1.jpg' %}');
+                            height: 200px;
+                            background-size: cover;
+                            background-position: center;
+                            position: relative;">
+
+                    <!-- Затемнение фона -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                               background: rgba(0, 0, 0, 0.3);"></div>
+
+                    <!-- Название товара -->
+                    <h5 class="position-relative p-3 mb-0"
+                        style="color: #0f0;
+                               text-shadow: 0 0 5px #0f0,
+                                            0 0 10px #0f0,
+                                            0 0 20px #0f0;">
+                        {{ product.name }}
+                    </h5>
+                </div>
+
+                <!-- Блок с кнопками -->
+                <div class="card-body">
+                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                    <p class="card-text"><strong>Цена: {{ product.price }} руб.</strong></p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'catalog:product_detail' product.pk %}"
+                           class="btn btn-sm btn-info">Подробнее</a>
+                        
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'catalog:product_update' product.pk %}"
+                           class="btn btn-sm btn-primary">Изменить</a>
+                        <a href="{% url 'catalog:product_delete' product.pk %}"
+                           class="btn btn-sm btn-danger">Удалить</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>Товаров пока нет</h4>
+                <p>Будьте первым, кто добавит товар в наш магазин!</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'catalog:product_create' %}" class="btn btn-primary">Добавить первый товар</a>
+                {% else %}
+                <a href="{% url 'users:login' %}" class="btn btn-primary">Войти для добавления товаров</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

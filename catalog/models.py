@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 # catalog/models.py
 
-
 class Category(models.Model):
     """
     Модель категории товаров

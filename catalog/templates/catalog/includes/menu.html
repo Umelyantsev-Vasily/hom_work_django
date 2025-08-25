@@ -1,25 +1,32 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'catalog:home' %}">Skystore</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                       href="{% url 'catalog:home' %}">Главная</a>
+                    <a class="nav-link" href="{% url 'catalog:home' %}">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'blog:post_list' %}">
-                        <i class="fas fa-blog"></i> Блог
-                    </a>
+                    <a class="nav-link" href="{% url 'catalog:product_list' %}">Все товары</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}"
-                       href="{% url 'catalog:contacts' %}">Контакты</a>
+                    <a class="nav-link" href="{% url 'catalog:contacts' %}">Контакты</a>
                 </li>
             </ul>
+
+            <!-- Дополнительные ссылки для авторизованных пользователей -->
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-success btn-sm me-2" href="{% url 'catalog:product_create' %}">
+                        + Добавить товар
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
         </div>
     </div>
 </nav>
