@@ -9,6 +9,8 @@ from .forms import ProductForm
 from .services import ProductService
 from django.core.cache import cache
 from django.conf import settings
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 
 # Главная страница - доступна всем
@@ -42,12 +44,18 @@ class ProductListView(ListView):
 
 
 # Детали товара - доступны всем (только опубликованные)
+@method_decorator(cache_page(60 * 15), name='dispatch')  # Кеширование на 15 минут
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
 
     def get_queryset(self):
         return Product.objects.filter(publication_status='published')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        return context
 
 
 # Контакты - доступны всем

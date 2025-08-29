@@ -5,6 +5,14 @@
 
 {% block content %}
 <div class="container mt-4">
+
+    <!-- Индикатор кеширования (для разработки) -->
+    {% if request.GET.debug %}
+    <div class="alert alert-info mb-3">
+        <small>Страница закеширована. Обновится через 15 минут</small>
+    </div>
+    {% endif %}
+
     <div class="row">
         <div class="col-md-6">
             {% if product.image %}
@@ -27,6 +35,11 @@
                     {% else %}bg-danger{% endif %}">
                     {{ product.get_publication_status_display }}
                 </span>
+
+                <!-- Индикатор кеширования (маленький) -->
+                <span class="badge bg-secondary ms-2" title="Данные закешированы">
+                    <i class="bi bi-lightning-charge"></i> Кеш
+                </span>
             </div>
 
             <p class="lead text-primary fs-3">{{ product.price }} руб.</p>
@@ -39,18 +52,16 @@
                 </div>
             </div>
 
-            <!-- Информация о владельце -->
+            <!-- Остальной код без изменений -->
             {% if product.owner %}
                 <p class="text-muted small">Владелец: {{ product.owner.username }}</p>
             {% endif %}
 
             <div class="d-flex gap-2 flex-wrap">
-                <!-- Кнопка покупки -->
                 <button class="btn btn-primary">Купить</button>
                 <a href="{% url 'catalog:home' %}" class="btn btn-secondary">На главную</a>
                 <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-secondary">Все товары</a>
 
-                <!-- Кнопки для владельца -->
                 {% if user == product.owner %}
                     <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-outline-primary">
                         <i class="bi bi-pencil"></i> Редактировать
@@ -60,9 +71,7 @@
                     </a>
                 {% endif %}
 
-                <!-- Правильные проверки прав через has_perm -->
                 {% if user.is_authenticated %}
-                    <!-- Кнопка отмены публикации для модератора или владельца -->
                     {% if perms.catalog.can_unpublish_product or user == product.owner %}
                         {% if product.publication_status == 'published' %}
                             <form method="post" action="{% url 'catalog:unpublish_product' product.pk %}" class="d-inline">
@@ -75,17 +84,15 @@
                     {% endif %}
                 {% endif %}
 
-                    <!-- Кнопка удаления для модератора -->
-                    {% if perms.catalog.catalog.can_delete_any_product %}
-                        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">
-                            <i class="bi bi-trash"></i> Удалить (модератор)
-                        </a>
-                    {% endif %}
+                {% if perms.catalog.can_delete_any_product %}
+                    <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Удалить (модератор)
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Дополнительная информация -->
     <div class="row mt-4">
         <div class="col-12">
             <div class="card">
