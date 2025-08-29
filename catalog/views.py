@@ -6,6 +6,9 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseForbidden
 from .models import Product, Category
 from .forms import ProductForm
+from .services import ProductService
+from django.core.cache import cache
+from django.conf import settings
 
 
 # Главная страница - доступна всем
@@ -27,7 +30,15 @@ class ProductListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        return Product.objects.filter(publication_status='published')
+        cache_key = 'all_published_products'
+        products = cache.get(cache_key)
+
+        if products is None or not settings.CACHE_ENABLED:
+            products = Product.objects.filter(publication_status='published')
+            if settings.CACHE_ENABLED:
+                cache.set(cache_key, products, 60 * 15)  # 15 минут
+
+        return products
 
 
 # Детали товара - доступны всем (только опубликованные)
@@ -119,3 +130,15 @@ def unpublish_product(request, pk):
     product.save()
 
     return redirect('catalog:product_detail', pk=product.pk)
+
+
+def category_products_view(request, category_name):
+    """Представление для отображения продуктов по категории"""
+    products = ProductService.get_products_by_category(category_name)
+
+    context = {
+        'products': products,
+        'category_name': category_name,
+    }
+
+    return render(request, 'catalog/category_products.html', context)
