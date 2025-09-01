@@ -1,4 +1,5 @@
 # catalog/urls.py
+from . import views
 from django.urls import path
 from .views import (
     HomeView, ProductListView, ProductDetailView, ContactsView,
@@ -16,4 +17,5 @@ urlpatterns = [
     path('product/<int:pk>/edit/', ProductUpdateView.as_view(), name='product_update'),
     path('product/<int:pk>/delete/', ProductDeleteView.as_view(), name='product_delete'),
     path('product/<int:pk>/unpublish/', unpublish_product, name='unpublish_product'),  # добавляем новый путь
+    path('category/<str:category_name>/', views.category_products_view, name='category_products'),
 ]
